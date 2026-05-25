@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Doctor Dashboard - Dhakne Healthcare</title>
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f7fa;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content { flex: 1; }
+        .navbar-custom {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dashboard-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.1);
+            overflow: hidden;
+        }
+        .analytics-card {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.2s ease;
+        }
+        .analytics-card:hover { transform: translateY(-2px); }
+        .badge-completed {
+            background-color: #dcfce7; color: #15803d;
+            font-weight: 700; padding: 6px 12px; border-radius: 8px;
+        }
+        .badge-pending {
+            background-color: #fef9c3; color: #a16207;
+            font-weight: 700; padding: 6px 12px; border-radius: 8px;
+        }
+        .footer-minimal {
+            background-color: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            padding: 24px 0;
+            font-size: 0.85rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            border: 1px solid #cbd5e1;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="main-content">
+        <nav class="navbar navbar-dark navbar-custom shadow-sm py-3">
+            <div class="container-fluid px-4">
+                <span class="navbar-brand mb-0 h1 fw-bold" style="font-weight: 800; letter-spacing: -0.5px;">⚕️ Dhakne TeleHealth Practitioner Portal</span>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white bg-white bg-opacity-10 rounded-pill px-3 py-1.5 border border-white border-opacity-10 small fw-semibold" th:text="${'Welcome, ' + doctorName}">Welcome, Doctor</span>
+                    <a href="/logout" class="btn btn-outline-light btn-sm fw-bold px-3 rounded-pill">Logout</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid px-4 mt-4 mb-5">
+            <div th:if="${param.success}" class="alert alert-success border-0 shadow-sm rounded-3 mb-4" th:text="${param.success}"></div>
+            
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card analytics-card bg-white border shadow-sm p-4 d-flex flex-row justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold small text-muted mb-1">Pending Sessions</h6>
+                            <h2 class="fw-extrabold text-dark mb-0" th:text="${pendingCount != null ? pendingCount : '0'}">0</h2>
+                        </div>
+                        <div class="fs-2 bg-warning bg-opacity-10 p-2.5 rounded-3 text-warning d-flex align-items-center justify-content-center"><i class="bi bi-clock-history"></i></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card analytics-card bg-white border shadow-sm p-4 d-flex flex-row justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold small text-muted mb-1">Completed Cases</h6>
+                            <h2 class="fw-extrabold text-dark mb-0" th:text="${completedCount != null ? completedCount : '0'}">0</h2>
+                        </div>
+                        <div class="fs-2 bg-success bg-opacity-10 p-2.5 rounded-3 text-success d-flex align-items-center justify-content-center"><i class="bi bi-check-circle-fill"></i></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card analytics-card bg-white border shadow-sm p-4 d-flex flex-row justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-uppercase fw-bold small text-muted mb-1">Total Gross Earnings</h6>
+							<h2 class="fw-extrabold text-success mb-0">₹<span th:text="${totalEarnings != null ? #numbers.formatDecimal(totalEarnings, 1, 2) : '0.00'}">0.00</span></h2>
+                        </div>
+                        <div class="fs-2 bg-primary bg-opacity-10 p-2.5 rounded-3 text-primary d-flex align-items-center justify-content-center"><i class="bi bi-currency-rupee"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="dashboard-card p-4 mb-4">
+                        <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2"><i class="bi bi-sliders text-primary"></i> Clinical Profile Setup</h5>
+                        <form th:action="@{/doctor/profile/save}" method="post">
+                            <input type="hidden" name="userId" th:value="${doctorUserId != null} ? ${doctorUserId} : ''" />
+                            <div class="mb-3">
+                                <label class="small fw-bold text-muted mb-1">Specialization Field</label>
+                                <input type="text" name="specialization" th:value="${profile != null} ? ${profile.specialization} : ''" class="form-control" placeholder="e.g. Cardiology" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small fw-bold text-muted mb-1">Practice Experience (Years)</label>
+                                <input type="number" name="experienceYears" th:value="${profile != null} ? ${profile.experienceYears} : ''" class="form-control" placeholder="e.g. 8" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="small fw-bold text-muted mb-1">Consultation Session Fee (₹)</label>
+                                <input type="number" step="0.01" name="consultationFee" th:value="${profile != null} ? ${profile.consultationFee} : ''" class="form-control" placeholder="e.g. 500" required/>
+                            </div>
+                            <div class="mb-4">
+                                <label class="small fw-bold text-muted mb-1">Daily Available Hours</label>
+                                <input type="text" name="availabilityHours" th:value="${profile != null} ? ${profile.availabilityHours} : ''" class="form-control" placeholder="e.g. 09:00 AM - 05:00 PM" required/>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2 rounded-3 shadow-sm">Save Parameters</button>
+                        </form>
+                    </div>
+
+                    <div class="dashboard-card p-4">
+                        <h5 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2 text-danger"><i class="bi bi-calendar-x-fill"></i> Leave Planner Scheduler</h5>
+                        <p class="text-muted mb-3" style="font-size: 0.75rem;">Set leave timelines to automatically block slots on patient side panels.</p>
+                        
+                        <form th:action="@{/doctor/leave/save}" method="post" class="row g-2 mb-4">
+                            <div class="col-8">
+                                <input type="date" name="leaveDate" class="form-control form-control-sm" required />
+                            </div>
+                            <div class="col-4">
+                                <button type="submit" class="btn btn-danger btn-sm w-100 fw-bold h-100"><i class="bi bi-plus-lg"></i> Add</button>
+                            </div>
+                        </form>
+
+                        <div class="table-responsive" style="max-height: 180px; overflow-y: auto;">
+                            <table class="table table-sm table-bordered align-middle small text-dark mb-0">
+                                <thead class="table-light font-semibold text-secondary" style="font-size: 0.7rem;">
+                                    <tr>
+                                        <th>Configured Block Dates</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="leave : ${myLeaves}">
+                                        <td class="font-monospace text-dark ps-2 py-2" th:text="${leave.leaveDate}">2026-05-24</td>
+                                        <td class="text-center"><span class="badge bg-danger bg-opacity-10 text-danger rounded px-2 py-1 fw-bold" style="font-size:0.65rem;">On Leave</span></td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(myLeaves)}">
+                                        <td colspan="2" class="text-center py-3 text-muted" style="font-size: 0.72rem;">No leaves scheduled.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 mb-4">
+                    <div class="dashboard-card p-4">
+                        <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2"><i class="bi bi-journal-medical text-primary"></i> Assigned Active Appointments Board</h5>
+                        <div th:if="${#lists.isEmpty(appointments)}" class="text-center py-5 text-muted">
+                            <p class="mb-0 small fw-semibold">No patient bookings logged for today.</p>
+                        </div>
+                        <div class="table-responsive" th:if="${!#lists.isEmpty(appointments)}">
+                            <table class="table table-hover align-middle small mb-0">
+                                <thead class="table-light text-secondary text-uppercase" style="font-size: 0.72rem;">
+                                    <tr>
+                                        <th class="py-3 ps-3">Patient Name</th>
+                                        <th class="py-3">Schedule Slot</th>
+                                        <th class="py-3">Status</th>
+                                        <th class="py-3 text-end pe-3">Consultation Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="appt : ${appointments}" class="border-bottom border-light-subtle">
+                                        <td class="fw-bold text-dark text-capitalize py-3.5 ps-3" th:text="${appt.patient != null} ? ${appt.patient.fullName} : 'Unknown Patient'">Patient Name</td>
+                                        <td class="py-3.5">
+                                            <span class="fw-semibold text-secondary" th:text="${appt.appointmentDate}">Date</span><br>
+                                            <span class="text-muted small" th:text="${appt.timeSlot}">Time</span>
+                                        </td>
+                                        <td class="py-3.5">
+                                            <span th:class="${appt.status != null and appt.status.name() == 'COMPLETED'} ? 'badge-completed' : 'badge-pending'" th:text="${appt.status}">STATUS</span>
+                                        </td>
+                                        <td class="py-3.5 text-end pe-3">
+                                            <a th:if="${appt.status != null and appt.status.name() == 'PENDING'}" 
+                                               th:href="@{/doctor/appointment/prescribe/{id}(id=${appt.id})}" 
+                                               class="btn btn-success btn-sm fw-bold px-3 shadow-sm rounded-pill">
+                                               📋 Diagnose Patient
+                                            </a>
+                                            <span th:if="${appt.status != null and appt.status.name() == 'COMPLETED'}" class="text-success small fst-italic fw-semibold">
+                                                  ✅ Session Handled
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-minimal">
+        <div class="container-fluid px-4 text-center text-muted">
+            <span>🏥 Dhakne Medical Group Practitioner Network Core</span>
+            <span class="mx-2">|</span> © 2026 TeleHealth Secured Engine Framework.
+        </div>
+    </footer>
+</body>
+</html>

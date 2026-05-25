@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dhakne Super Speciality Hospital | Digital Care Portal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link class="d-print-none" rel="icon" href="data:,">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f1f5f9; /* Soft background to enhance glass contrast */
+            color: #1e293b;
+            scroll-behavior: smooth;
+        }
+        
+        /* TRANSLUCENT MODERN NAV BAR WITH HORIZONTAL LINKS */
+        .navbar-custom {
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        .nav-link-apple {
+            color: #94a3b8 !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding-bottom: 4px;
+            transition: color 0.25s ease;
+        }
+        .nav-link-apple:hover {
+            color: #3b82f6 !important;
+        }
+        .active-link {
+            color: #ffffff !important;
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        /* HIGH-IMPACT GEOMETRIC HERO BANNER */
+        .hero-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+            color: white;
+            padding: 85px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+        }
+
+        /* FLOATING HERO IMAGE ANIMATION */
+        .hero-img-floating {
+            animation: floatAnimation 4s ease-in-out infinite;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* PREMIUM DYNAMIC GLASSMORPHISM CARDS */
+        .feature-card, .review-card, .faq-item {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px) saturate(120%);
+            -webkit-backdrop-filter: blur(16px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .feature-card:hover, .review-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 30px 40px -15px rgba(15, 23, 42, 0.08), 0 12px 20px -10px rgba(15, 23, 42, 0.04);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        /* DYNAMIC ICON SLOTS */
+        .icon-box-cyber {
+            width: 52px;
+            height: 52px;
+            background: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover .icon-box-cyber {
+            background-color: #2563eb;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* EMERGENCY STRIP HIGHLIGHTER */
+        .emergency-banner {
+            background-color: rgba(255, 241, 242, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px dashed #fda4af;
+            border-radius: 16px;
+        }
+
+        /* STATS GRID HIGHLIGHTS */
+        .stat-item {
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        @media (max-width: 767px) {
+            .stat-item { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 15px; margin-bottom: 15px; }
+        }
+
+        /* GLASS ACCORDION FAQS SYSTEM */
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.6) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 16px !important;
+            overflow: hidden;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .accordion-button {
+            background: transparent !important;
+            color: #1e293b !important;
+            box-shadow: none !important;
+            padding: 20px;
+        }
+        .accordion-button:not(.collapsed) {
+            background: rgba(59, 130, 246, 0.08) !important;
+            color: #1e3a8a !important;
+        }
+        .accordion-body {
+            background: transparent;
+            color: #475569;
+            padding: 0 20px 20px 20px;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-2">
+        <div class="container d-flex justify-content-between align-items-center">
+            
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#" style="font-weight: 800; font-size: 1.2rem;">
+                <i class="bi bi-shield-plus text-primary"></i> Dhakne Hospital
+            </a>
+
+            <div class="d-none d-lg-flex align-items-center gap-4" style="font-size: 0.92rem;">
+                <a href="#" class="nav-link-apple active-link">Home</a>
+                <a href="#features" class="nav-link-apple">Services</a>
+                <a href="#reviews" class="nav-link-apple">About</a>
+                <a href="#faq" class="nav-link-apple">Contact</a>
+                <a href="/register" class="nav-link-apple">Book a visit</a>
+            </div>
+
+            <div class="d-flex gap-3 align-items-center">
+                <a href="/login" class="text-white-50 text-decoration-none small fw-medium">Sign In</a>
+                <a href="/register" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold shadow-sm">Join Portal</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <header class="hero-section shadow-sm d-flex align-items-center">
+        <div class="container position-relative" style="z-index: 2;">
+            <div class="row align-items-center g-5 text-start">
+                
+                <div class="col-lg-7 text-center text-lg-start">
+                    <span class="badge bg-blue bg-opacity-25 text-blue border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-bold text-uppercase mb-3 small" style="color: #60a5fa; letter-spacing: 0.5px;">
+                        🏥 Smart OPD Appointment Grid Engine
+                    </span>
+                    <h1 class="display-5 fw-bold mb-3 text-white" style="font-weight: 800; letter-spacing: -1px; line-height: 1.15;">
+                        Your Health, Our Super Speciality Care
+                    </h1>
+                    <p class="lead text-white-50 mb-4 fs-5" style="font-weight: 400; line-height: 1.45;">
+                        Welcome to the Dhakne Hospital Digital Portal. Reserve your physical doctor check-up slots online, secure immediate OPD tokens, and view your verified physical prescription histories directly after your check-up.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
+                        <a href="/register" class="btn btn-warning text-dark btn-lg fw-bold px-4 rounded-3 shadow">
+                            <i class="bi bi-calendar-check me-2"></i>Book Appointment
+                        </a>
+                        <a href="/login" class="btn btn-outline-light btn-lg fw-semibold px-4 rounded-3">
+                            <i class="bi bi-person-workspace me-2"></i>Doctor Console
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 text-center">
+                    <img th:src="@{https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=600&auto=format&fit=crop}" 
+                         alt="Medical Dashboard" 
+                         class="img-fluid hero-img-floating d-none d-lg-block" />
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-primary text-white py-4 shadow-sm" style="background: linear-gradient(90deg, #1e3a8a 0%, #1d4ed8 100%);">
+        <div class="container">
+            <div class="row text-center justify-content-center g-3">
+                <div class="col-md-5 stat-item">
+                    <h3 class="fw-bold mb-0">15,000+</h3>
+                    <p class="small text-white-50 mb-0">Happy Patients Healed</p>
+                </div>
+                <div class="col-md-5">
+                    <h3 class="fw-bold mb-0">50+</h3>
+                    <p class="small text-white-50 mb-0">Expert Medical Consultants</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" class="py-5 border-bottom">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary fw-bold text-uppercase small tracking-wider">Patient Testimonials</span>
+                <h2 class="fw-bold text-dark mt-1" style="font-weight: 800; letter-spacing: -0.5px;">Stories of Recovery & Trust</h2>
+                <p class="text-muted small mx-auto" style="max-width: 500px;">Read genuine experiences from patients who recovered through our digital healthcare portal.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card review-card h-100 p-4">
+                        <div class="card-body p-0">
+                            <div class="text-warning mb-2">
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            </div>
+                            <p class="card-text text-secondary small italic mb-4" style="line-height: 1.6; font-style: italic;">
+                                "I used to stand in lines at 7 AM for an OPD ticket at the counter. Now, I simply pre-booked my doctor visit online, arrived exactly at my allocated slot, and skipped the ticket queue completely!"
+                            </p>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-blue bg-opacity-10 text-primary rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 0.95rem;">
+                                    RK
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">Rahul Kulkarni</h6>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Pune, Maharashtra</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card review-card h-100 p-4">
+                        <div class="card-body p-0">
+                            <div class="text-warning mb-2">
+                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                            </div>
+                            <p class="card-text text-secondary small italic mb-4" style="line-height: 1.6; font-style: italic;">
+                                "The secure 6-digit registration OTP verified my profile instantly. My visit token was generated beforehand, and right after my check-up, the doctor submitted my prescription directly into my portal account!"
+                            </p>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle fw-bold d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; font-size: 0.95rem;">
+                                    SP
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0" style="font-size: 0.95rem;">Snehal Patil</h6>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Hinjewadi, Pune</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="container my-5 py-4">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-dark mb-2" style="font-weight: 800; letter-spacing: -0.5px;">Smart Portal Features</h2>
+            <p class="text-muted small mx-auto" style="max-width: 500px;">Fast, secure, and designed to streamline your hospital visit.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm feature-card p-4 text-start">
+                    <div class="card-body p-0">
+                        <div class="icon-box-cyber">
+                            <i class="bi bi-calendar2-check"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark mb-2" style="font-weight: 700; font-size: 1.15rem;">Instant OPD Tokens</h4>
+                        <p class="card-text text-secondary small" style="line-height: 1.5;">
+                            Pre-book your digital token online before arriving and skip the registration counter lines completely.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm feature-card p-4 text-start">
+                    <div class="card-body p-0">
+                        <div class="icon-box-cyber" style="color: #059669; background-color: rgba(5, 150, 105, 0.1);">
+                            <i class="bi bi-clock-history"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark mb-2" style="font-weight: 700; font-size: 1.15rem;">Live Doctor Slots</h4>
+                        <p class="card-text text-secondary small" style="line-height: 1.5;">
+                            Check active consultant schedules in real-time and secure your exact check-up window instantly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm feature-card p-4 text-start">
+                    <div class="card-body p-0">
+                        <div class="icon-box-cyber" style="color: #0d9488; background-color: rgba(13, 148, 136, 0.1);">
+                            <i class="bi bi-file-earmark-medical"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark mb-2" style="font-weight: 700; font-size: 1.15rem;">Prescription History</h4>
+                        <p class="card-text text-secondary small" style="line-height: 1.5;">
+                            Access all your verified doctor prescriptions securely on your dashboard immediately after your check-up.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="container my-5 pb-4">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase small tracking-wider">Got Questions?</span>
+            <h2 class="fw-bold text-dark mt-1" style="font-weight: 800; letter-spacing: -0.5px;">Portal Usage Guidelines</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion accordion-flush" id="portalFaqAccordion">
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingOne">
+                            <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="false" aria-controls="faqCollapseOne">
+                                What should I do if I don't receive the 6-digit registration OTP code?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseOne" class="accordion-collapse collapse" aria-labelledby="faqHeadingOne" data-bs-parent="#portalFaqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                First, check your email accounts' Spam/Promotions folder. If it is missing there, ensure your mail address pattern matches your actual sign-up credentials or trigger a recovery check after 5 minutes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingTwo">
+                            <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                                How do I use my pre-booked token at the hospital?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#portalFaqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                Simply report to the corresponding department desk 10 minutes before your allocated slot time and present your digital dashboard token number to bypass the physical registration desks instantly.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faqHeadingThree">
+                            <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                                Why am I redirected to the sign-in page when trying to load my prescription vault?
+                            </button>
+                        </h2>
+                        <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#portalFaqAccordion">
+                            <div class="accordion-body text-secondary small">
+                                For data protection and privacy control, user roles are strictly validated via security filters. If your session expires or you try to view logs without an active account token, our system automatically routes you back to secure sign-in paths.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white border-top border-bottom py-5 mt-auto">
+        <div class="container text-center" style="max-width: 700px;">
+            <h3 class="fw-bold mb-2 text-dark" style="font-weight: 800; letter-spacing: -0.3px;">Need Immediate Emergency Attention?</h3>
+            <p class="text-muted small mb-4">If you or someone near you is suffering from an acute trauma or medical crisis, please skip online configurations and report directly to our 24/7 ER units or call our dedicated fleet support numbers.</p>
+            <div class="emergency-banner p-3 d-inline-block fw-bold px-4 m-0 shadow-sm">
+                <span class="text-danger" style="font-size: 0.95rem;">
+                    🚨 Emergency Help Desk: <span class="font-monospace text-dark ms-1">+91 98765 43210</span> &nbsp;|&nbsp; 🚑 Ambulance Direct: <span class="badge bg-danger ms-1 px-2 py-1 fs-7">108</span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-muted py-4 text-center border-top border-primary border-3 d-print-none">
+        <div class="container">
+            <p class="small text-white mb-1 fw-semibold">🏥 Dhakne Super Speciality Hospital Group</p>
+            <p class="small mb-0" style="font-size: 0.72rem; color: #94a3b8;">Phase 3, Hinjewadi IT Park, Pune, MH, India &nbsp;|&nbsp; © 2026 All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

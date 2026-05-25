@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Account Activation Core Gate - OTP Verification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="card shadow border-0 p-4 rounded-4" style="width: 100%; max-width: 430px; background-color:#fff;">
+        <div class="text-center mb-3">
+            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill small fw-bold">Identity Verification Protocol</span>
+        </div>
+        <h4 class="fw-bold text-dark text-center mb-1">Enter Security Code</h4>
+        <p class="text-muted small text-center mb-4">A unique 6-digit numeric validation OTP has been transmitted onto your registered email channel signature mailbox inbox.</p>
+        
+        <div th:if="${error}" class="alert alert-danger border-0 small fw-semibold text-center mb-3" th:text="${error}"></div>
+
+        <form th:action="@{/verify-otp}" method="post">
+            <input type="hidden" name="email" th:value="${targetEmail}" />
+            
+            <div class="mb-4">
+                <label class="form-label small fw-bold text-secondary d-block text-center mb-2">6-Digit Verification OTP</label>
+                <input type="text" name="otpCode" class="form-control text-center rounded-3 py-2 fw-bold" 
+                       style="font-size: 24px; letter-spacing: 6px;" maxlength="6" pattern="\d{6}" placeholder="000000" inputmode="numeric" required autocomplete="off" />
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm mb-2">Verify & Activate Profile</button>
+            <div class="text-center"><a href="/login" class="text-decoration-none small fw-bold text-secondary">Cancel and Return</a></div>
+        </form>
+    </div>
+</body>
+</html>

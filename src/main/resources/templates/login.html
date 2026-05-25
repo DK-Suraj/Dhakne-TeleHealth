@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dhakne Hospital | Sign In</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* Seamlessly aligns with the register layout design mesh */
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Ambient background glow to preserve consistent platform styling */
+        body::before {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* ULTIMATE GLASSMORPHISM CONTAINER SHELL */
+        .glass-login-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logo-link {
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            font-size: 1.4rem;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* SECURE TRANSLUCENT FORM CONTROLS */
+        .form-control-glass {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 11px 16px !important;
+            transition: all 0.3s ease !important;
+        }
+        .form-control-glass::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+        }
+        .form-control-glass:focus {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        /* HIGH-IMPACT GLASS-FLOW PRIMARY BUTTON */
+        .btn-action-submit {
+            background: #2563eb;
+            color: #ffffff;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-action-submit:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+
+        .text-glass-muted {
+            color: #cbd5e1;
+        }
+        .link-highlight-blue {
+            color: #38bdf8;
+            font-weight: 500;
+        }
+        .link-highlight-blue:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" style="max-width: 460px;">
+    
+    <div class="card glass-login-card p-4 p-sm-5 shadow-none border-0">
+        
+        <div class="text-center mb-4">
+            <a href="/" class="brand-logo-link mb-2 d-inline-flex align-items-center gap-2">
+                <i class="bi bi-shield-plus text-primary"></i> Dhakne Hospital
+            </a>
+            <p class="text-glass-muted small mb-0">Secure Account Authentication Console</p>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success bg-success bg-opacity-20 border-success border-opacity-30 text-white small rounded-3 p-3 mb-3" th:text="${param.success}"></div>
+        
+        <div th:if="${param.error}" class="alert alert-danger bg-danger bg-opacity-20 border-danger border-opacity-30 text-white small rounded-3 p-3 mb-3">
+            Invalid credentials or account email verification is incomplete.
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger bg-danger bg-opacity-20 border-danger border-opacity-30 text-white small rounded-3 p-3 mb-3" th:text="${error}"></div>
+        
+        <div th:if="${param.logout}" class="alert alert-info bg-info bg-opacity-20 border-info border-opacity-30 text-white small rounded-3 p-3 mb-3">
+            Successfully logged out from the active session node.
+        </div>
+
+        <form th:action="@{/login-process}" method="post" class="mt-2">
+            
+            <div class="mb-3">
+                <label class="form-label text-glass-muted small fw-semibold">Email Address</label>
+                <input type="email" name="username" class="form-control form-control-glass" placeholder="name@example.com" required autocomplete="username" />
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label text-glass-muted small fw-semibold">Secure Password</label>
+                <input type="password" name="password" class="form-control form-control-glass" placeholder="••••••••" required autocomplete="current-password" />
+            </div>
+            
+            <button type="submit" class="btn btn-action-submit w-100 py-2.5 shadow">Authorize & Sign In</button>
+        </form>
+        
+        <div class="text-center mt-4 border-top border-white border-opacity-10 pt-3">
+            <p class="small mb-1.5 text-glass-muted">Forgot password? <a href="/forgot-password" class="link-highlight-blue text-decoration-none">Reset here</a></p>
+            <p class="small mb-2 text-glass-muted">New user? <a href="/register" class="link-highlight-blue text-decoration-none">Create an account</a></p>
+            <p class="small mb-0 mt-3"><a href="/" class="text-white-50 text-decoration-none small d-inline-flex align-items-center gap-1 hover-alpha"><i class="bi bi-arrow-left"></i> Return to Main Website</a></p>
+        </div>
+
+    </div>
+
+</div>
+
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

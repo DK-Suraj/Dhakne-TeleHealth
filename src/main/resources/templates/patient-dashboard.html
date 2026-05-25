@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Patient Dashboard - Dhakne Healthcare</title>
+	<link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+		rel="stylesheet">
+
+	<style>
+		body {
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			background-color: #f4f7fa;
+			color: #1e293b;
+			display: flex;
+			flex-direction: column;
+			min-height: 100vh;
+		}
+
+		.main-content {
+			flex: 1;
+		}
+
+		/* PREMIUM GLASS NAVIGATION BAR */
+		.navbar-custom {
+			background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 100%);
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		/* EMERGENCY ALERT RUNNER */
+		.emergency-banner {
+			background-color: #fef2f2;
+			border-bottom: 1px solid #fee2e2;
+			color: #991b1b;
+			font-size: 0.85rem;
+		}
+
+		@keyframes blink {
+			0%, 100% { opacity: 1; }
+			50% { opacity: 0.4; }
+		}
+
+		.emergency-blink {
+			animation: blink 1.2s infinite;
+		}
+
+		/* HERO PROFILE WIDGET CARD */
+		.hero-profile-card {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 16px;
+			padding: 24px;
+			box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.12);
+		}
+
+		/* APP CORE CARDS DESIGN */
+		.dashboard-card {
+			background: #ffffff;
+			border: 1px solid #e2e8f0;
+			border-radius: 20px;
+			box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.15);
+			overflow: hidden;
+			transition: transform 0.3s ease;
+		}
+
+		.card-header-custom {
+			padding: 20px 24px;
+			font-weight: 700;
+			font-size: 1.1rem;
+			letter-spacing: -0.3px;
+		}
+
+		/* DOCTOR SPECS ITEMS */
+		.doctor-item-card {
+			background: #ffffff;
+			border: 1px solid #f1f5f9;
+			border-radius: 16px;
+			transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.doctor-item-card:hover {
+			transform: translateY(-4px);
+			border-color: #cbd5e1;
+			box-shadow: 0 12px 20px -8px rgba(30, 58, 138, 0.15);
+		}
+
+		/* FORM FIELDS STYLING */
+		.form-control,
+		.form-select {
+			border-radius: 10px;
+			border: 1px solid #cbd5e1;
+			padding: 10px 14px;
+			font-size: 0.9rem;
+			transition: all 0.2s ease;
+		}
+
+		.form-control:focus,
+		.form-select:focus {
+			border-color: #3b82f6;
+			box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+		}
+
+		/* PREMIUM DUAL PRESCRIPTION CONTAINER */
+		.rx-paper-container {
+			border: 1px solid #e2e8f0;
+			padding: 35px;
+			background-color: #ffffff;
+			border-radius: 16px;
+			box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.01), 0 4px 12px rgba(0, 0, 0, 0.03);
+			position: relative;
+		}
+
+		.rx-paper-container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 6px;
+			border-radius: 16px 16px 0 0;
+			background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+		}
+
+		.rx-header-line {
+			border-bottom: 2px dashed #e2e8f0;
+		}
+
+		.rx-content-box {
+			background-color: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-left: 4px solid #3b82f6 !important;
+			padding: 18px;
+			border-radius: 12px;
+			font-size: 0.95rem;
+		}
+
+		.rx-section-title {
+			font-size: 0.8rem;
+			font-weight: 800;
+			letter-spacing: 1px;
+			color: #475569;
+		}
+
+		/* TAB CONTROLLERS MODERN PILLS */
+		.nav-pills-custom .nav-link {
+			border-radius: 10px;
+			padding: 10px 20px;
+			font-weight: 600;
+			color: #64748b;
+			transition: all 0.2s ease;
+		}
+
+		.nav-pills-custom .nav-link.active {
+			background-color: #1e3a8a;
+			color: #ffffff;
+			box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+		}
+
+		.nav-pills-custom .nav-link.active.bill-pill-btn {
+			background-color: #10b981;
+			box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+		}
+
+		/* MODERN MINIMAL FOOTER */
+		.footer-minimal {
+			background-color: #ffffff;
+			border-top: 1px solid #e2e8f0;
+			padding: 24px 0;
+			font-size: 0.85rem;
+		}
+
+		/* HIGH DEF HOVER BADGES */
+		.badge-completed {
+			background-color: #dcfce7;
+			color: #15803d;
+			font-weight: 700;
+			padding: 6px 12px;
+			border-radius: 8px;
+		}
+
+		.badge-pending {
+			background-color: #fef9c3;
+			color: #a16207;
+			font-weight: 700;
+			padding: 6px 12px;
+			border-radius: 8px;
+		}
+
+		/* CUSTOM BUTTON GRAPHICS */
+		.btn-premium-primary {
+			background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-weight: 600;
+			transition: all 0.2s ease;
+		}
+
+		.btn-premium-primary:hover {
+			background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="main-content">
+		<nav class="navbar navbar-dark navbar-custom shadow-sm py-3">
+			<div class="container-fluid px-4">
+				<span class="navbar-brand mb-0 h1 fw-extrabold d-flex align-items-center gap-2"
+					style="font-weight: 800; letter-spacing: -0.5px;">
+					⚕️ Dhakne TeleHealth Portal
+				</span>
+				<div class="d-flex align-items-center gap-4">
+					<div
+						class="bg-white bg-opacity-10 rounded-pill px-3 py-1.5 border border-white border-opacity-10 d-none d-sm-block">
+						<span class="text-white-50 small me-1">Patient Status:</span>
+						<span class="text-white small text-capitalize fw-bold" th:text="${patientName}">Patient Name</span>
+					</div>
+					<a href="/logout" class="btn btn-outline-light btn-sm fw-bold px-3 rounded-pill">Logout</a>
+				</div>
+			</div>
+		</nav>
+
+		<div class="emergency-banner py-2.5 shadow-sm">
+			<div class="container-fluid d-flex align-items-center px-4">
+				<span class="badge bg-danger text-white fw-bold me-3 px-3 py-2 text-uppercase shadow-sm"
+					style="font-size: 0.72rem; letter-spacing: 0.5px; border-radius: 6px;">
+					<span class="emergency-blink">🚨</span> Critical Emergency
+				</span>
+				<marquee class="fw-semibold mb-0 pt-0.5" behavior="scroll" direction="left" scrollamount="5"
+					onmouseover="this.stop();" onmouseout="this.start();">
+					Notice: If you are experiencing acute chest pain, severe shortness of breath, or trauma, bypass this
+					consultation window and seek critical emergency care immediately or dial 108 / 911.
+				</marquee>
+			</div>
+		</div>
+
+		<div class="container-fluid mt-4 px-4 mb-5">
+
+			<div class="hero-profile-card mb-4">
+				<div class="row align-items-center">
+					<div class="col-md-8">
+						<h3 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.5px;">Hello, <span
+								class="text-primary text-capitalize" th:text="${patientName}">Patient</span>!</h3>
+						<p class="text-muted mb-0 small">Manage your digital healthcare bookings, monitor live
+							consultations, and access official prescription copies instantly.</p>
+					</div>
+					<div class="col-md-4 text-md-end mt-3 mt-md-0">
+						<span class="text-muted small fw-medium">Active Secure Session</span>
+						<div
+							class="fw-bold text-success small d-flex align-items-center justify-content-md-end gap-1.5 mt-0.5">
+							<span class="d-inline-block rounded-circle bg-success"
+								style="width: 8px; height: 8px;"></span> Live Sync Enabled
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div th:if="${param.success}"
+				class="alert alert-success border-0 shadow-sm rounded-3 mb-4 p-3 small fw-semibold"
+				th:text="${param.success}"></div>
+
+			<div th:if="${param.error}"
+				class="alert alert-danger alert-dismissible fade show border-0 shadow-sm rounded-3 mb-4 p-3 text-dark bg-danger bg-opacity-10"
+				style="border-left: 5px solid #ef4444 !important;" role="alert">
+				<span class="fw-bold">🚨 Booking Request Denied:</span> <span class="fw-semibold"
+					th:text="${param.error}">Leave constraint operational exception.</span>
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-5 mb-4">
+					<div class="dashboard-card shadow-sm h-100">
+						<div
+							class="card-header-custom bg-white border-bottom text-dark d-flex align-items-center gap-2">
+							<span>🔍</span> Find Medical Specialists
+						</div>
+						<div class="card-body p-4">
+
+							<div class="row g-2 mb-4">
+								<div class="col-sm-7">
+									<div class="input-group shadow-sm rounded-3" style="overflow:hidden;">
+										<span class="input-group-text bg-white border-end-0 text-muted ps-3">🔍</span>
+										<input type="text" id="doctorSearchInput"
+											class="form-control border-start-0 ps-1" placeholder="Search doctor name..."
+											onkeyup="filterSpecialists()">
+									</div>
+								</div>
+								<div class="col-sm-5">
+									<select id="specialtyFilterSelect"
+										class="form-select fw-semibold text-secondary shadow-sm"
+										onchange="filterSpecialists()">
+										<option value="ALL">All Specialities</option>
+										<option value="CARDIOLOGY">Cardiology</option>
+										<option value="CARDIOLOGIST">Cardiologist</option>
+										<option value="DENTIST">Dentist</option>
+										<option value="PEDIATRICIAN">Pediatrician</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="row" id="doctorCardsContainer"
+								style="max-height: 650px; overflow-y: auto; padding-right: 4px;">
+								<div class="col-12 mb-3 doctor-card-item" th:each="doc : ${doctors}"
+									th:attr="data-name=${#strings.toLowerCase(doc.user.fullName)}, data-specialty=${#strings.toUpperCase(#strings.trim(doc.specialization))}">
+									<div class="doctor-item-card p-4 border shadow-sm">
+										<div class="d-flex justify-content-between align-items-start mb-2">
+											<div>
+												<h5 class="fw-bold text-dark mb-1 text-capitalize"
+													th:text="${doc.user.fullName}">Doctor Name</h5>
+												<span
+													class="badge bg-primary bg-opacity-10 text-primary fw-bold px-2.5 py-1.5 rounded"
+													style="font-size: 0.75rem;"
+													th:text="${doc.specialization}">Specialization</span>
+											</div>
+											<div class="text-end">
+												<span class="text-muted small d-block">Consultation Fee</span>
+												<span class="fw-extrabold text-success fs-5 fw-bold">₹<span
+														th:text="${doc.consultationFee}">0.00</span></span>
+											</div>
+										</div>
+
+										<div class="bg-light rounded-3 p-2.5 my-3 border border-light-subtle row mx-0 text-muted"
+											style="font-size: 0.8rem;">
+											<div class="col-6">💼 <strong>Exp:</strong> <span
+													class="text-dark fw-semibold"
+													th:text="${doc.experienceYears}">0</span> Years</div>
+											<div class="col-6 text-end">⏰ <span class="text-dark fw-semibold"
+													th:text="${doc.availabilityHours}">Hours</span></div>
+										</div>
+
+										<form th:action="@{/patient/appointment/book}" method="post"
+											class="row g-2 align-items-center border-top pt-3 mt-2">
+											<input type="hidden" name="doctorId" th:value="${doc.id}" />
+											<div class="col-sm-5">
+												<input type="date" name="appointmentDate"
+													class="form-control form-control-sm" required />
+											</div>
+											<div class="col-sm-4">
+												<select name="timeSlot"
+													class="form-select form-select-sm fw-semibold text-secondary"
+													required>
+													<option value="10:00 AM">10:00 AM</option>
+													<option value="11:30 AM">11:30 AM</option>
+													<option value="02:00 PM">02:00 PM</option>
+													<option value="03:30 PM">03:30 PM</option>
+												</select>
+											</div>
+											<div class="col-sm-3">
+												<button type="submit"
+													class="btn btn-premium-primary btn-sm w-100 py-2">Book</button>
+											</div>
+										</form>
+									</div>
+								</div>
+
+								<div id="noDoctorsFallback"
+									class="col-12 text-center text-muted py-5 card border-0 shadow-sm bg-white d-none rounded-4">
+									<p class="mb-0 small text-secondary fw-semibold">No medical professionals match your
+										filter criteria.</p>
+								</div>
+
+								<div class="col-12 text-center text-muted py-5 card border-0 shadow-sm bg-white rounded-4"
+									th:if="${#lists.isEmpty(doctors)}">
+									<p class="mb-0 small text-secondary fw-semibold">No active medical practitioners are
+										configured on this domain node.</p>
+								</div>
+							</div>
+
+                        </div>
+					</div>
+				</div>
+
+				<div class="col-lg-7 mb-4">
+					<div class="dashboard-card shadow-sm h-100">
+						<div
+							class="card-header-custom bg-white border-bottom text-dark d-flex align-items-center gap-2">
+							<span>📋</span> Medical Logs & Prescription History
+						</div>
+						<div class="card-body p-4">
+							<div th:if="${#lists.isEmpty(myAppointments)}" class="text-center text-muted py-5">
+								<p class="lead mb-0 small text-secondary fw-semibold">No consultation cases linked onto
+									this profile signature.</p>
+							</div>
+
+							<div class="table-responsive" th:if="${!#lists.isEmpty(myAppointments)}">
+								<table class="table table-hover align-middle small mb-0">
+									<thead class="table-light text-uppercase text-secondary"
+										style="font-size: 0.72rem; letter-spacing: 0.5px;">
+										<tr>
+											<th style="width: 30%;" class="py-3 ps-3">Attending Doctor</th>
+											<th style="width: 25%;" class="py-3">Schedule Slot</th>
+											<th style="width: 20%;" class="py-3">Session Status</th>
+											<th style="width: 25%;" class="py-3 text-end pe-3">Documentation</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="appt : ${myAppointments}"
+											class="border-bottom border-light-subtle">
+											<td class="fw-bold text-dark text-capitalize py-3.5 ps-3"
+												th:text="${appt.doctor.user.fullName}">Doctor Name</td>
+											
+											<td class="py-3.5">
+												<span class="fw-semibold text-secondary" th:text="${appt.appointmentDate}">Date</span><br>
+												<span class="text-muted small" style="font-size: 0.75rem;" th:text="${appt.timeSlot}">Time</span><br>
+												<span class="badge bg-dark bg-opacity-10 text-dark fw-bold mt-1" style="font-size: 0.68rem; padding: 4px 10px; border-radius: 6px;">
+													🎫 Ticket No: #<span th:text="${appt.tokenNumber != null ? appt.tokenNumber : '1'}">1</span>
+												</span>
+											</td>
+
+											<td class="py-3.5">
+												<span
+													th:class="${appt.status.name() == 'COMPLETED'} ? 'badge-completed' : 'badge-pending'"
+													th:text="${appt.status}">STATUS</span>
+											</td>
+											<td class="py-3.5 text-end pe-3">
+												<div th:if="${appt.status.name() == 'PENDING'}" class="d-flex justify-content-end align-items-center gap-2">
+													<span class="text-muted fst-italic small me-1">Awaiting Review</span>
+													<form th:action="@{/patient/appointment/cancel}" method="post" onsubmit="return confirm('Are you sure you want to cancel this appointment request?');" class="d-inline">
+														<input type="hidden" name="appointmentId" th:value="${appt.id}" />
+														<button type="submit" class="btn btn-sm btn-outline-danger px-2.5 py-1 fw-bold rounded-pill" style="font-size: 0.72rem;">❌ Cancel</button>
+													</form>
+												</div>
+
+												<div th:if="${appt.status.name() == 'COMPLETED'}">
+													<button th:if="${appt.prescription != null}" type="button"
+														class="btn btn-outline-primary btn-sm fw-bold px-3 shadow-sm rounded-pill"
+														style="font-size: 0.78rem;" data-bs-toggle="modal"
+														th:data-bs-target="'#rxModal-' + ${appt.id}">
+														📄 View Slip & Bill
+													</button>
+													<span th:if="${appt.prescription == null}"
+														class="text-muted small">Closed Session</span>
+												</div>
+
+												<div th:if="${appt.prescription != null}" class="modal fade"
+													th:id="'rxModal-' + ${appt.id}" tabindex="-1" aria-hidden="true">
+													<div class="modal-dialog modal-dialog-centered modal-lg">
+														<div class="modal-content border-0 shadow-lg rounded-4">
+
+															<div class="modal-header bg-dark text-white p-3 border-0">
+																<h5 class="modal-title fw-bold small text-uppercase"
+																	style="font-size:0.85rem; letter-spacing:0.5px;">🏥
+																	Dynamic Documentation Core</h5>
+																<button type="button" class="btn-close btn-close-white"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+
+															<div class="modal-body p-4 bg-white"
+																th:id="'printSection-' + ${appt.id}">
+
+																<ul class="nav nav-pills nav-pills-custom nav-fill mb-4 p-1 bg-light rounded-3 border d-print-none"
+																	role="tablist">
+																	<li class="nav-item">
+																		<button class="nav-link active py-2"
+																			th:id="'rx-tab-' + ${appt.id}"
+																			data-bs-toggle="pill"
+																			th:data-bs-target="'#rx-view-' + ${appt.id}"
+																			type="button">📋 Clinical
+																			Prescription</button>
+																	</li>
+																	<li class="nav-item">
+																		<button class="nav-link py-2 bill-pill-btn"
+																			th:id="'bill-tab-' + ${appt.id}"
+																			data-bs-toggle="pill"
+																			th:data-bs-target="'#bill-view-' + ${appt.id}"
+																			type="button">💳 Official Tax Receipt
+																			(₹)</button>
+																	</li>
+																</ul>
+
+																<div class="tab-content">
+																	<div class="tab-pane fade show active"
+																		th:id="'rx-view-' + ${appt.id}" role="tabpanel">
+																		<div class="rx-paper-container">
+																			<div
+																				class="d-flex justify-content-between rx-header-line pb-3 mb-4">
+																				<div>
+																					<h3 class="fw-bold text-primary mb-1 text-uppercase"
+																						style="letter-spacing: -0.3px;"
+																						th:text="${appt.doctor.user.fullName}">
+																						Dr. Name</h3>
+																					<p class="text-secondary fw-bold small mb-1"
+																						th:text="${appt.doctor.specialization}">
+																						Specialization</p>
+																					<p class="text-muted mb-0"
+																						style="font-size: 0.72rem;">Reg
+																						Code: <strong>DSH-2026-00<span
+																								th:text="${appt.doctor.id}">1</span></strong>
+																					</p>
+																				</div>
+																				<div class="text-end">
+																					<h4 class="fw-bold text-secondary text-uppercase mb-2"
+																						style="font-size: 1rem; letter-spacing: 0.5px;">
+																						Outpatient Case</h4>
+																					<p class="small text-dark mb-1"
+																						style="font-size:0.8rem;">
+																						<strong>Date:</strong> <span
+																							th:text="${appt.appointmentDate}">Date</span>
+																					</p>
+																					<p class="small text-dark mb-0"
+																						style="font-size:0.8rem;">
+																						<strong>Slot:</strong> <span
+																							th:text="${appt.timeSlot}">Slot</span>
+																					</p>
+																				</div>
+																			</div>
+
+																			<div
+																				class="row bg-light rounded-3 p-3 mb-4 g-2 border mx-0 align-items-center small">
+																				<div class="col-6 text-dark">
+																					<strong>Patient:</strong> <span
+																						class="text-capitalize fw-bold text-primary ms-1"
+																						th:text="${patientName}">Patient</span>
+																				</div>
+																				<div class="col-6 text-dark text-end"
+																					th:if="${appt.patient != null}">
+																					<strong>Phone:</strong> <span
+																						class="fw-bold text-secondary ms-1"
+																						th:text="${appt.patient.phoneNumber}">Phone</span>
+																				</div>
+																			</div>
+
+																			<div class="mb-4">
+																				<h6 class="rx-section-title mb-2">🔍
+																					CLINICAL OBSERVATIONS & SYMPTOMS
+																				</h6>
+																				<div class="rx-content-box text-dark text-start"
+																					style="white-space: pre-wrap; line-height: 1.5; font-weight: 500;"
+																					th:text="${appt.prescription.symptoms}">
+																					Symptoms details</div>
+																			</div>
+
+																			<div class="mb-4">
+																				<h6 class="rx-section-title mb-2">💊 Rx
+																					MEDICATION & TIMING SYSTEM</h6>
+																				<div class="rx-content-box text-dark text-start font-monospace"
+																					style="white-space: pre-wrap; line-height: 1.7; background-color: #f0fdf4; border-left-color: #22c55e !important;"
+																					th:text="${appt.prescription.medicines}">
+																					Prescription items summary</div>
+																			</div>
+
+																			<div
+																				class="d-flex justify-content-between align-items-end pt-3 mt-5 border-top border-light-subtle">
+																				<div class="text-muted fst-italic"
+																					style="font-size: 0.65rem;">
+																					Generated via secure Dhakne
+																					Cryptographic API Node layer.</div>
+																				<div class="text-center"
+																					style="min-width: 240px;">
+																					<div class="border-bottom border-dark pb-1 fw-bold text-primary text-capitalize small"
+																						th:text="${appt.doctor.user.fullName}">
+																						Dr Name</div>
+																					<div class="text-muted mt-1 fw-bold text-uppercase" style="font-size: 0.6rem; letter-spacing: 0.5px;">Authorized Medical Signature</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="tab-pane fade"
+																		th:id="'bill-view-' + ${appt.id}"
+																		role="tabpanel">
+																		<div class="rx-paper-container"
+																			style="border-top-color: #10b981;">
+																			<div
+																				class="d-flex justify-content-between rx-header-line pb-3 mb-4">
+																				<div>
+																					<h3 class="fw-bold text-success mb-1 text-uppercase"
+																						style="letter-spacing: -0.3px;">
+																						Dhakne Medical Group</h3>
+																					<p class="text-muted small mb-0"
+																						style="font-size:0.8rem;">
+																						Hinjewadi IT Park, Pune, MH,
+																						India</p>
+																					<p class="text-muted mb-0"
+																						style="font-size: 0.72rem;">
+																						GSTIN Exemption Clause / PAN:
+																						<strong>AAACD9982F</strong></p>
+																				</div>
+																				<div class="text-end">
+																					<h4 class="fw-bold text-secondary text-uppercase mb-2"
+																						style="font-size: 1rem; letter-spacing: 0.5px;">
+																						Tax Invoice</h4>
+																					<p class="small text-dark mb-1"
+																						style="font-size:0.8rem;">
+																						<strong>Invoice No:</strong>
+																						<span
+																							th:text="'INV-2026-' + ${appt.id}">INV-2026-1</span>
+																					</p>
+																					<p class="small text-dark mb-0"
+																						style="font-size:0.8rem;">
+																						<strong>Date:</strong> <span
+																							th:text="${appt.appointmentDate}">Date</span>
+																					</p>
+                																</div>
+																			</div>
+
+																			<div
+																				class="row bg-light rounded-3 p-3 mb-4 border mx-0 small text-dark">
+																				<div class="col-sm-6">
+																					<strong>Customer / Patient
+																						Details:</strong><br>
+																					<span
+																						class="text-capitalize fw-bold text-primary"
+																						th:text="${patientName}">Patient</span><br>
+																					Phone Reference: <span
+																						th:text="${appt.patient != null} ? ${appt.patient.phoneNumber} : ''">Phone</span>
+																				</div>
+																				<div
+																					class="col-sm-6 text-sm-end mt-2 mt-sm-0">
+																					<strong>Medical
+																						Practitioner:</strong><br>
+																					<span
+																						class="text-capitalize fw-bold text-secondary"
+																						th:text="${appt.doctor.user.fullName}">Dr
+																						Name</span><br>
+																					Department: <span
+																						th:text="${appt.doctor.specialization}">Specialization</span>
+                																</div>
+																			</div>
+
+																			<div class="table-responsive mb-4">
+																				<table
+																					class="table table-bordered table-striped align-middle small text-dark mb-0">
+																					<thead
+																						class="table-secondary text-uppercase"
+																						style="font-size: 0.7rem; letter-spacing: 0.3px;">
+																						<tr>
+																							<th style="width: 10%;"
+																								class="text-center">Sr.
+																								No.</th>
+																							<th style="width: 60%;">
+																								Consultation Line
+																								Service Charge</th>
+																							<th style="width: 30%;"
+																								class="text-end">Paid
+																								Balance</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<tr>
+																							<td class="text-center">1
+																							</td>
+																							<td>
+																								<strong>TeleHealth
+																									Portal Consultation
+																									Charge</strong><br>
+																								<span
+																									class="text-muted small"
+																									style="font-size:0.75rem;">Includes
+																									live data link
+																									tracking, diagnostic
+																									evaluation, and
+																									secured Rx pad
+																									sync.</span>
+																							</td>
+																							<td
+																								class="text-end fw-bold">
+																								₹<span
+																									th:text="${#numbers.formatDecimal(appt.doctor.consultationFee, 1, 2)}">0.00</span>
+																							</td>
+																						</tr>
+																						<tr class="table-light">
+																							<td></td>
+																							<td class="text-end fw-bold text-uppercase"
+																								style="font-size: 0.72rem;">
+																								Central GST / State GST
+																								(Healthcare Exempt):
+																							</td>
+																							<td
+																								class="text-end text-muted">
+																								₹0.00</td>
+																						</tr>
+																						<tr class="table-success fw-bold text-dark fs-6"
+																							style="font-size:0.95rem;">
+																							<td></td>
+																							<td
+																								class="text-end text-uppercase">
+																								Total Settled Invoice
+																								Fee:</td>
+																							<td class="text-end">₹<span
+																									th:text="${#numbers.formatDecimal(appt.doctor.consultationFee, 1, 2)}">0.00</span>
+																							</td>
+																						</tr>
+																					</tbody>
+																				</table>
+																			</div>
+
+																			<div
+																				class="bg-light p-2.5 rounded border border-success mb-4 text-center">
+																				<span
+																					class="text-success small fw-bold">💳
+																					TRANSACTION COMPLETED: CHARGED TO
+																					SOURCE (₹)</span>
+																			</div>
+
+																			<div
+																				class="d-flex justify-content-between align-items-end pt-3 mt-4 border-top border-light-subtle">
+																				<div class="text-muted fst-italic"
+																					style="font-size: 0.65rem;">
+																					Digitally authorized transaction
+																					slip. Bound under corporate
+																					validation bylaws.</div>
+																				<div class="text-center"
+																					style="min-width: 220px;">
+																					<div class="border-bottom border-secondary pb-1 text-muted fw-bold small"
+																						style="font-size:0.7rem; letter-spacing: 0.5px;">
+																						DSH GATEWAY DESK CASHIER</div>
+																					<div class="text-success mt-1 fw-bold text-uppercase"
+																						style="font-size: 0.62rem; letter-spacing: 0.5px;">
+																						✅ GATEWAY CAPTURE</div>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+
+															<div class="modal-footer bg-light p-2 border-0">
+																<button type="button"
+																	class="btn btn-secondary btn-sm fw-bold px-3 rounded-3"
+																	data-bs-dismiss="modal">Close</button>
+																<button type="button"
+																	class="btn btn-success btn-sm fw-bold px-4 shadow-sm rounded-3"
+																	th:onclick="'printRxSlip(\'printSection-\' + ' + ${appt.id} + ')'">
+																	🖨️ Print Sheet
+																</button>
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer-minimal">
+		<div class="container-fluid px-4">
+			<div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-muted">
+				<div>
+					<span class="fw-bold text-dark">🏥 Dhakne Medical Group</span>
+					<span class="mx-2">|</span> Phase 3, Hinjewadi IT Park, Pune, MH, India
+				</div>
+
+				<div class="d-flex flex-wrap justify-content-center gap-3">
+					<span>General Desk: <strong class="text-dark">+91 20 5557 8900</strong></span>
+					<span>Support: <strong class="text-dark">contact@dhaknehospital.com</strong></span>
+					<span class="text-danger fw-bold">🚨 Trauma Emergency: +91 98765 43210</span>
+				</div>
+
+				<div>
+					<span class="text-secondary opacity-75">© 2026 TeleHealth Engine</span>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script th:inline="javascript">
+		// 1. ISOLATED HIGH-DEFINITION VIEWPORT PRINTER
+		function printRxSlip(divId) {
+			var printContents = document.getElementById(divId).innerHTML;
+			var originalContents = document.body.innerHTML;
+
+			document.body.innerHTML = "<html><head><title>Prescription Slip</title><link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'><style>body{font-family:sans-serif;}.nav-pills,.modal-footer,.modal-header{display:none!important;}.rx-paper-container{border:1px solid #cbd5e1!important;box-shadow:none!important;padding:10px!important;}</style></head><body style='padding:20px; background-color:#fff;'><div class='container'>" + printContents + "</div></body></html>";
+
+			window.print();
+
+			document.body.innerHTML = originalContents;
+			window.location.reload();
+		}
+
+		// 2. CLIENT-SIDE SEARCH AND SPECS SELECTION BALANCER
+		function filterSpecialists() {
+			var searchQuery = document.getElementById("doctorSearchInput").value.toLowerCase();
+			var selectedSpecialty = document.getElementById("specialtyFilterSelect").value.toUpperCase();
+			var cards = document.getElementsByClassName("doctor-card-item");
+			var fallbackMessage = document.getElementById("noDoctorsFallback");
+			var visibleCount = 0;
+
+			for (var i = 0; i < cards.length; i++) {
+				var docName = cards[i].getAttribute("data-name") || "";
+				var docSpecialty = cards[i].getAttribute("data-specialty") || "";
+
+				var matchesSearch = docName.includes(searchQuery);
+				var matchesSpecialty = (selectedSpecialty === "ALL" ||
+					docSpecialty === selectedSpecialty ||
+					(selectedSpecialty === "CARDIOLOGY" && docSpecialty === "CARDIOLOGIST") ||
+					(selectedSpecialty === "CARDIOLOGIST" && docSpecialty === "CARDIOLOGY"));
+
+				if (matchesSearch && matchesSpecialty) {
+					cards[i].style.setProperty("display", "block", "important");
+					visibleCount++;
+				} else {
+					cards[i].style.setProperty("display", "none", "important");
+				}
+			}
+
+			if (visibleCount === 0) {
+				fallbackMessage.classList.remove("d-none");
+			} else {
+                fallbackMessage.classList.add("d-none");
+			}
+		}
+	</script>
+
+	<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>
